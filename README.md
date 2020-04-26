@@ -17,4 +17,4 @@
 [OpenWeather API](https://openweathermap.org/api)
 
 ### Page Mock-up
-![mock-up](OpenWeather API [](https://raw.githubusercontent.com/Kaynalem/weather-dashboard/master/mockup.PNG))
+![mock-up](https://raw.githubusercontent.com/Kaynalem/weather-dashboard/master/mockup.PNG))
