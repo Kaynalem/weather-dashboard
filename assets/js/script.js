@@ -1,19 +1,27 @@
 const APIKey = "71f0affdf4c99a202cf0423a9baf6d29";
 
-$(document).ready(function () {
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+});
+
+$(document).ready(function() {
     // when search button is clicked
-    $("#searchBtn").on("click", function () {
+    $("#searchBtn").on("click", function() {
+        
         const searchTerm = $("#searchCity").val().trim();
         $("#searchCity").val("");
         weatherCurrent(searchTerm);// current weather for city
         weatherFuture(searchTerm);// 5-day forecast for city
+
     });
     // when enter button pressed
-    $("#searchCity").on('keyup', function (e) {
+    $("#searchCity").on('keyup', function(e) {
         const searchTerm = $("#searchCity").val().trim();
         if (e.keyCode === 13) {
+            $("#searchCity").val("");
             weatherCurrent(searchTerm);// current weather for city
             weatherFuture(searchTerm);// 5-day forecast for city
+
         }
     });
 });    
@@ -28,7 +36,7 @@ for (var i = 0; i < searchHistory.length; i++) {// display each city stored in l
 
 function showHistory(text) {
     var searchCity = $("<li>").addClass("list-group-item").text(text);
-    $("#searchHistory").append(searchCity);
+    $("#searchHistory").prepend(searchCity);//order by most recent searched City
 }
 // display weather when user clicks on city form search history list
 $("#searchHistory").on("click", "li", function () {
@@ -95,7 +103,7 @@ function weatherFuture(searchTerm) {
         console.log(data);
             $("#weatherTitle").html("<h4 class=\"mt-3\">5-Day Forecast:</h4>").append("<div class=\"row\">");
             $("#weatherForecast").empty();
-            for (var i = 5; i < data.list.length; i+=8) {
+            for (var i = 5; i < data.list.length; i +=8 ) {
             //for (var i = 1; i < data.list.length; i++) {
                 //if (data.list[i].dt_txt.indexOf("12:00:00") !== -1) {
 
