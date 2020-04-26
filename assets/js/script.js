@@ -1,10 +1,11 @@
 const APIKey = "71f0affdf4c99a202cf0423a9baf6d29";
+const currentWeatherDiv = $("#weatherCurrent");
 
 $(function () {
     $('[data-toggle="tooltip"]').tooltip()
 });
-
 $(document).ready(function() {
+    
     // search City entered when search button is clicked
     $("#searchBtn").on("click", function() {
         
@@ -21,15 +22,14 @@ $(document).ready(function() {
             $("#searchCity").val("");
             weatherCurrent(searchTerm);// current weather for city
             weatherFuture(searchTerm);// 5-day forecast for city
-
         }
     });
-});    
+});   
 var searchHistory = JSON.parse(localStorage.getItem("history")) || []; // gets any search history from local storage
 
-if (searchHistory.length > 0) {
+/*if (searchHistory.length > 0) {
     weatherCurrent(searchHistory[searchHistory.length -1]);
-}
+}*///displays current weather of last searched city on refresh
 for (var i = 0; i < searchHistory.length; i++) {// display each city stored in local storage
     showHistory(searchHistory[i]);
 }
@@ -63,10 +63,11 @@ function weatherCurrent(searchTerm) {
         } else {
             alert("City entered was not found. Please enter a valid city.")
         }
+
     })
     .then((data) => {
-        
         $("#weatherCurrent").empty();
+        
         var city = $("<h3>").addClass("card-title").text(data.name + " (" + new Date().toLocaleDateString() + ")");
         var icon =  $("<img>").attr("src", "https://openweathermap.org/img/w/" + data.weather[0].icon + ".png");
         var card = $("<div>").addClass("card");
@@ -97,13 +98,15 @@ function weatherCurrent(searchTerm) {
         // add values to card for current city weather
         cardBody.append(uvIndex);
         $("#weatherCurrent .card-body").append(uvIndex.append(uvColor));
+
     });
         city.append(icon);
         cardBody.append(city, temp, humidity, wind);
         card.append(cardBody);
+        
         $("#weatherCurrent").append(card);
+
     });
-    
 }
 //5 day forecast
 function weatherFuture(searchTerm) {
@@ -112,7 +115,7 @@ function weatherFuture(searchTerm) {
         return response.json();
     })
     .then((data) => {
-        console.log(data);
+        //console.log(data);
             $("#weatherTitle").html("<h4 class=\"mt-3\">5-Day Forecast:</h4>").append("<div class=\"row\">");
             $("#weatherForecast").empty();
             for (var i = 5; i < data.list.length; i +=8 ) {
@@ -133,5 +136,5 @@ function weatherFuture(searchTerm) {
         }
         
     });
-
+    
 }
