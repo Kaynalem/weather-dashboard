@@ -5,7 +5,7 @@ $(function () {
 });
 
 $(document).ready(function() {
-    // when search button is clicked
+    // search City entered when search button is clicked
     $("#searchBtn").on("click", function() {
         
         const searchTerm = $("#searchCity").val().trim();
@@ -14,7 +14,7 @@ $(document).ready(function() {
         weatherFuture(searchTerm);// 5-day forecast for city
 
     });
-    // when enter button pressed
+    // search City entered when enter button pressed
     $("#searchCity").on('keyup', function(e) {
         const searchTerm = $("#searchCity").val().trim();
         if (e.keyCode === 13) {
@@ -38,6 +38,7 @@ function showHistory(text) {
     var searchCity = $("<li>").addClass("list-group-item").text(text);
     $("#searchHistory").prepend(searchCity);//order by most recent searched City
 }
+
 // display weather when user clicks on city form search history list
 $("#searchHistory").on("click", "li", function () {
     weatherCurrent($(this).text());
@@ -51,6 +52,10 @@ function weatherCurrent(searchTerm) {
             // add city to local storage/search history if weather information found
             if (searchHistory.indexOf(searchTerm) === -1) {// if index of searched City does not exist in local storage, add city to local storage list
                 searchHistory.push(searchTerm);
+                /*to 10 most recent searches to local storage so only last 10 appear on refresh-not required for challenge
+                if (searchHistory.length > 10) {
+                    searchHistory.splice(0, searchHistory.length - 10);
+                } */
                 localStorage.setItem("history", JSON.stringify(searchHistory));// places item pushed into local storage
                 showHistory(searchTerm);
             }
@@ -122,10 +127,7 @@ function weatherFuture(searchTerm) {
                     var tempFive = $("<p>").addClass("card-text").text("Temperature: " + Math.round(data.list[i].main.temp) + " °F");
                     var humidityFive = $("<p>").addClass("card-text").text("Humidity: " + data.list[i].main.humidity + "%");
                     
-
-                    //merge together and put on page
                     contFive.append(cardFive.append(cardBodyFive.append(dateFive, iconFive, tempFive, humidityFive)));
-                    //append card to column, body to card, and other elements to body
                     $("#weatherForecast").append(contFive);
                // }
         }
