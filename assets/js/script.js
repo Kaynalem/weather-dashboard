@@ -47,14 +47,20 @@ $("#searchHistory").on("click", "li", function () {
 function weatherCurrent(searchTerm) {
     fetch('https://api.openweathermap.org/data/2.5/weather?q=' + searchTerm + '&appid=' + APIKey + '&units=imperial')
     .then((response) => {
-        return response.json();
+        if (response.ok) {
+            // add city to local storage/search history if weather information found
+            if (searchHistory.indexOf(searchTerm) === -1) {// if index of searched City does not exist in local storage, add city to local storage list
+                searchHistory.push(searchTerm);
+                localStorage.setItem("history", JSON.stringify(searchHistory));// places item pushed into local storage
+                showHistory(searchTerm);
+            }
+            return response.json();
+        } else {
+            alert("City entered was not found. Please enter a valid city.")
+        }
     })
     .then((data) => {
-        if (searchHistory.indexOf(searchTerm) === -1) {// if index of searched City does not exist in local storage, add city to local storage list
-            searchHistory.push(searchTerm);
-            localStorage.setItem("history", JSON.stringify(searchHistory));// places item pushed into local storage
-            showHistory(searchTerm);
-        }
+        
         $("#weatherCurrent").empty();
         var city = $("<h3>").addClass("card-title").text(data.name + " (" + new Date().toLocaleDateString() + ")");
         var icon =  $("<img>").attr("src", "https://openweathermap.org/img/w/" + data.weather[0].icon + ".png");
@@ -92,6 +98,7 @@ function weatherCurrent(searchTerm) {
         card.append(cardBody);
         $("#weatherCurrent").append(card);
     });
+    
 }
 //5 day forecast
 function weatherFuture(searchTerm) {
