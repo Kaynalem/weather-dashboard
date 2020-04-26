@@ -104,11 +104,13 @@ function weatherCurrent(searchTerm) {
 function weatherFuture(searchTerm) {
     fetch('https://api.openweathermap.org/data/2.5/forecast?q=' + searchTerm + '&appid=' + APIKey + '&units=imperial')
     .then((response) => {
-        return response.json();
+        if (response.ok) {
+            $("#weatherTitle").html("<h4 class=\"mt-3\">5-Day Forecast:</h4>").append("<div class=\"row\">");
+            return response.json();
+        }
     })
     .then((data) => {
         //console.log(data);
-        $("#weatherTitle").html("<h4 class=\"mt-3\">5-Day Forecast:</h4>").append("<div class=\"row\">");
         $("#weatherForecast").empty();
         for (var i = 5; i < data.list.length; i += 8 ) {
             var dateFive = $("<h4>").addClass("card-title").text(new Date(data.list[i].dt_txt).toLocaleDateString());
