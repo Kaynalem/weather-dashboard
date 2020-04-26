@@ -37,18 +37,52 @@ $("#searchHistory").on("click", "li", function () {
 });
 
 function weatherCurrent(searchTerm) {
-    fetch('http://api.openweathermap.org/data/2.5/weather?q=' + searchTerm + '&appid=' + APIKey)
+    fetch('http://api.openweathermap.org/data/2.5/weather?q=' + searchTerm + '&appid=' + APIKey + '&units=imperial')
     .then((response) => {
+        return response.json();
+    })
+    .then((data) => {
         if (searchHistory.indexOf(searchTerm) === -1) {// if index of searched City does not exist in local storage
             searchHistory.push(searchTerm);
             localStorage.setItem("history", JSON.stringify(searchHistory));// places item pushed into local storage with
             showHistory(searchTerm);
         }
         $("#weatherCurrent").empty();
+        var city = $("<h3>").addClass("card-title").text(data.name + " (" + new Date().toLocaleDateString() + ")");
+        var icon =  $("<img>").attr("src", "https://openweathermap.org/img/w/" + data.weather[0].icon + ".png");
+        var card = $("<div>").addClass("card");
+        var cardBody = $("<div>").addClass("card-body");
+        var temp = $("<p>").addClass("card-text").text("Temperature: " + Math.floor(data.main.temp) + " °F");
+        var humidity = $("<p>").addClass("card-text").text("Humidity: " + data.main.humidity + "%");
+        var wind = $("<p>").addClass("card-text").text("Wind Speed: " + data.wind.speed + " MPH");
+        
+        var cityLon = data.coord.lon;
+        var cityLat = data.coord.lat;
 
-        return response.json();
-    })
-    .then((data) => {
-        console.log(data);
+        fetch('http://api.openweathermap.org/data/2.5/uvi?appid=' + APIKey + '&lat=' + cityLat + '&lon=' + cityLon)
+        .then((response) => {
+            return response.json();
+        })
+        .then((data) => {
+            var uvValue = data.value;
+            var uvIndex = $("<p>").addClass("card-text").text("UV Index: ");
+            var btn = $("<span>").addClass("btn btn-sm").text(uvValue);
+
+            if (uvValue < 3) {
+                btn.addClass("btn-success")
+            } else if (uvValue < 7) {
+                btn.addClass("btn-warning");
+            } else {
+                btn.addClass("btn-danger");
+            }
+
+        cardBody.append(uvIndex);
+        $("#weatherCurrent .card-body").append(uvIndex.append(btn));
     });
+        city.append(icon);
+        cardBody.append(city, temp, humidity, wind);
+        card.append(cardBody);
+        $("#weatherCurrent").append(card);
+    });
+
 }
