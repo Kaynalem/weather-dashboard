@@ -107,6 +107,8 @@ function weatherFuture(searchTerm) {
         if (response.ok) {
             $("#weatherTitle").html("<h4 class=\"mt-3\">5-Day Forecast:</h4>").append("<div class=\"row\">");
             return response.json();
+        } else {
+            $("#weatherTitle").html("");
         }
     })
     .then((data) => {
