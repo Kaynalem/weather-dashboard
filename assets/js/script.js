@@ -112,10 +112,13 @@ function weatherFuture(searchTerm) {
         }
     })
     .then((data) => {
-        //console.log(data);
+        console.log(data);
         $("#weatherForecast").empty();
         for (var i = 5; i < data.list.length; i += 8 ) {
-            var dateFive = $("<h4>").addClass("card-title").text(new Date(data.list[i].dt_txt).toLocaleDateString());
+            var day = new Date(data.list[i].dt_txt).toLocaleDateString();
+            //console.log(day)
+            //console.log(moment().format(day, "MM/DD/YYYY"));
+            var dateFive = $("<h4>").addClass("card-title").text(moment().format(day, "MM/DD/YYYY"));
             var iconFive = $("<img>").attr("src", "https://openweathermap.org/img/w/" + data.list[i].weather[0].icon + ".png");
             var contFive = $("<div>").addClass("col-md-2");
             var cardFive = $("<div>").addClass("card bg-primary text-white");
