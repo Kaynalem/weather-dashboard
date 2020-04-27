@@ -64,8 +64,10 @@ function weatherCurrent(searchTerm) {
     })
     .then((data) => {
         $("#weatherCurrent").empty();
-        var city = $("<h3>").addClass("card-title").text(data.name + " (" + new Date().toLocaleDateString() + ")");
-        console.log(new Date().toLocaleDateString());
+        var today = new Date();
+        //console.log(today)
+        var city = $("<h3>").addClass("card-title").text(data.name + " (" + moment(today).format("MM/DD/YYYY") + ")");
+        //console.log(moment(today).format("MM/DD/YYYY"));
         var icon =  $("<img>").attr("src", "https://openweathermap.org/img/w/" + data.weather[0].icon + ".png");
         var card = $("<div>").addClass("card");
         var cardBody = $("<div>").addClass("card-body");
@@ -113,13 +115,13 @@ function weatherFuture(searchTerm) {
         }
     })
     .then((data) => {
-        console.log(data);
+        //console.log(data);
         $("#weatherForecast").empty();
         for (var i = 5; i < data.list.length; i += 8 ) {
             var day = new Date(data.list[i].dt_txt);
             //console.log(day)
             //console.log(moment(day).format("MM/DD/YYYY"));
-            var dateFive = $("<h4>").addClass("card-title").text(moment(day).format("MM/DD/YYYY"));
+            var dateFive = $("<h5>").addClass("card-title").text(moment(day).format("MM/DD/YYYY"));
             var iconFive = $("<img>").attr("src", "https://openweathermap.org/img/w/" + data.list[i].weather[0].icon + ".png");
             var contFive = $("<div>").addClass("col-md-2");
             var cardFive = $("<div>").addClass("card bg-primary text-white");
